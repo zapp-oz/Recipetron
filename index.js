@@ -9,14 +9,26 @@ const recipeRoutes = require("./src/routes/recipe")
 const userRoutes = require("./src/routes/user")
 
 const app = express()
-mongoose.connect("mongodb://127.0.0.1:27017/recipetron", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb://127.0.0.1:27017/recipetron", {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 
 app.use(express.json())
 app.use(cookieParser())
 
 app.get("/home", async (req, res) => {
     try{
+        let flag = 0;
+
         if(!req.cookies.id){
+            flag = 1
+        } else {
+            const user = await User.findOne({sessionId: req.cookies.id})
+
+            if(!user){
+                flag = 1
+            }
+        }
+
+        if(flag == 1){
             const id = uuidv1();
             res.cookie("id", id, {
                 maxAge: 2.628e9,
@@ -28,9 +40,7 @@ app.get("/home", async (req, res) => {
                 sessionId: id,
                 savedRecipes: []
             })
-            newUser.save((err) => {
-                console.log("error:", err)
-            })
+            await newUser.save()
         } 
         // else {
         //     const cookies = Object.entries(req.cookies)
@@ -41,7 +51,7 @@ app.get("/home", async (req, res) => {
         res.send()
 
     } catch(e){
-        console.log(e)
+        res.status(500).send(e)
     }
 })
 
