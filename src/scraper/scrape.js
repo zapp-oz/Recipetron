@@ -18,7 +18,7 @@ const self = {
     
     initialize: async (reddit) => {
         self.browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             args: ['--no-sandbox']
         })
         self.page = await self.browser.newPage()
