@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const axiosRecipe = axios.create({
+const axiosSpoon = axios.create({
     baseURL: "https://api.spoonacular.com/recipes/complexSearch",
     timeout: 30000,
     headers: {
@@ -24,4 +24,4 @@ const axiosRecipe = axios.create({
 //     return Promise.reject(err)
 // })
 
-module.exports = axiosRecipe
+module.exports = axiosSpoon
